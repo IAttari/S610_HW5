@@ -6,7 +6,7 @@ llr = function(x, y, z, omega) {
 compute_f_hat = function(z, x, y, omega) {
   Wz = make_weight_matrix(z, x, omega)
   X = make_predictor_matrix(x)
-  f_hat = c(1, z) %*% solve(t(X) %*% t(sapply(1:nrow(X), function(i) X[i, ] * Wz[i]))) %*% t(X) %*% matrix(sapply(1:length(y), function(i) y[i] * Wz[i]))
+  f_hat = c(1, z) %*% solve(t(X) %*% (sweep(X, 1, Wz, "*"))) %*% t(X) %*% matrix(Wz*y)
   return(f_hat)
 }
 
@@ -27,7 +27,7 @@ make_weight_matrix = function(z, x, omega){
     } 
     j = j+1
   }
-  return(W)
+  return (W)
 }
 
 
